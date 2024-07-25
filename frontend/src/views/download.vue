@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="download">
         <n-layout-header bordered class="download-header">
             <n-popover trigger="hover">

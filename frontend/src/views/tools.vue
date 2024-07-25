@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="tools">
         <n-layout-header bordered class="tools-header">
             <n-popover trigger="hover">

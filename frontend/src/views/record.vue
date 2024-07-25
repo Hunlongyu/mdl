@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div class="record">
         <n-layout-header bordered class="record-header">
             <n-popover trigger="hover">

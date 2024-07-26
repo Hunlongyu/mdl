@@ -12,6 +12,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+include(FetchContent)
+
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     add_executable(${PROJECT_NAME} WIN32)
 elseif(CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
@@ -26,6 +28,14 @@ target_sources(${PROJECT_NAME}
     PRIVATE
     "src/main.cpp"
  "src/utils/utils.h" "src/utils/utils.cpp" "src/config/config.cpp")
+
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.11.0
+)
+
+FetchContent_MakeAvailable(spdlog)
 
 include_directories("${CMAKE_SOURCE_DIR}/third_party/nlohmann")
 include_directories("${PROJECT_SOURCE_DIR}/third_party/webui/include")
@@ -42,6 +52,7 @@ target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
     ${WEBUI_LIB}
+    spdlog::spdlog
 )
 
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD

@@ -1,10 +1,13 @@
 ﻿#include "webui.hpp"
+#include "spdlog/spdlog.h"
 #include "./utils/sysinfo.hpp"
 #include "./config/config.cpp"
 #include <iostream>
 
 int main()
 {
+	spdlog::info("welcome to mdl");
+
 	SysInfo sys = getSysInfo();
 	std::cout << sys.os << std::endl;
 	std::cout << sys.arch << std::endl;

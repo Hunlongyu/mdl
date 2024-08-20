@@ -1,4 +1,6 @@
-﻿#include "base.h"
+﻿#pragma once
+
+#include "base.h"
 
 class LuxStrategy : public DownloadStrategy
 {
@@ -7,7 +9,7 @@ class LuxStrategy : public DownloadStrategy
     {
     }
 
-    VideoInfo fetchVideoInfo(const std::string &url) const override
+    std::string fetchVideoInfo(const std::string &url) const override
     {
     }
 

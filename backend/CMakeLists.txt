@@ -27,7 +27,7 @@ message(${CMAKE_BUILD_TYPE})
 target_sources(${PROJECT_NAME}
     PRIVATE
     "src/main.cpp"
- "src/utils/utils.h" "src/utils/utils.cpp" "src/config/config.cpp" "src/engine/lux.h" "src/engine/ytdlp.h" "src/engine/base.h")
+ "src/utils/utils.h" "src/utils/utils.cpp" "src/config/config.cpp" "src/engine/lux.h" "src/engine/ytdlp.h" "src/engine/base.h" "src/utils/js.h" "src/engine/downloader.h")
 
 FetchContent_Declare(
     spdlog
@@ -38,6 +38,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(spdlog)
 
 include_directories("${CMAKE_SOURCE_DIR}/third_party/nlohmann")
+include_directories("${CMAKE_SOURCE_DIR}/third_party/process")
 include_directories("${PROJECT_SOURCE_DIR}/third_party/webui/include")
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

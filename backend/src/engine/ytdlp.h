@@ -1,11 +1,13 @@
-﻿#include <array>
-// #include <cstdio>
-#include <iostream>
+﻿#pragma once
+
+#include <array>
+#include <cstdio>
 #include <memory>
 #include <stdexcept>
 
 #include "base.h"
 #include "json.hpp"
+#include "spdlog/spdlog.h"
 
 using json = nlohmann::json;
 
@@ -16,45 +18,70 @@ class YtdlStrategy : public DownloadStrategy
     {
     }
 
-    VideoInfo fetchVideoInfo(const std::string &url) const override
+    std::string fetchVideoInfo(const std::string &url) const override
     {
-        VideoInfo info;
-        std::string cmd = "E:/Hunlongyu/mdl/backend/bin/yt-dlp/yt-dlp.exe -j" + url;
-        std::array<char, 8192> buffer;
-        std::string result;
+        // std::string cmd = "E:/Hunlongyu/mdl/backend/bin/yt-dlp/yt-dlp.exe -j " + url;
+        std::string cmd = "E:/Hunlongyu/mdl/backend/bin/yt-dlp/yt-dlp.exe -j "
+                          "https://www.bilibili.com/video/BV1Mz421B7r1/?spm_id_from=333.1007.tianma.5-4-18.click";
 
-        // 使用 popen 执行命令并获取输出
-        /*std::shared_ptr<FILE> pipe(_popen(cmd.c_str(), "r"), _pclose);
-        if (!pipe)
-        {
-            throw std::runtime_error("popen() failed!");
-        }*/
-
-        // 读取整个输出
-        /*while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-        {
-            result += buffer.data();
-        }*/
+        std::string result = executeCommand(cmd);
+        json video_array = json::array();
+        json audio_array = json::array();
+        json subtitle_array = json::array();
 
         // 解析 JSON 数据
         try
         {
-            // auto json_data = json::parse(result);
+            auto json_data = json::parse(result);
+            for (const auto &format : json_data["formats"])
+            {
+                if (format.contains("video_ext") && format["video_ext"] != "none")
+                {
+                    int filesize{0};
+                    if (format.contains("filesize"))
+                    {
+                        filesize = !format["filesize"].is_null() ? format["filesize"].get<int>() : 0;
+                    }
+                    video_array.push_back({{"format_id", format.value("format_id", "")},
+                                           {"ext", format.value("ext", "")},
+                                           {"resolution", format.value("resolution", "")},
+                                           {"filesize", filesize}});
+                }
 
-            //// 填充 VideoInfo 结构体
-            // info.title = json_data.value("title", "");
-            // info.duration = json_data.value("duration_string", "");
-            // info.format = json_data.value("format", "");
-            // info.resolution = json_data.value("resolution", "");
-            // info.size = json_data.value("filesize", 0);
-            // info.thumbnail_url = json_data.value("thumbnail", "");
+                if (format.contains("audio_ext") && format["audio_ext"] != "none")
+                {
+                    int filesize{0};
+                    if (format.contains("filesize"))
+                    {
+                        filesize = !format["filesize"].is_null() ? format["filesize"].get<int>() : 0;
+                    }
+                    audio_array.push_back({{"format_id", format.value("format_id", "")},
+                                           {"ext", format.value("ext", "")},
+                                           {"filesize", filesize}});
+                }
+            }
+            if (json_data.contains("subtitles"))
+            {
+                for (const auto &[language, subtitles] : json_data["subtitles"].items())
+                {
+                    for (const auto &subtitle : subtitles)
+                    {
+                        subtitle_array.push_back({{"language", language}, {"ext", subtitle.value("ext", "")}});
+                    }
+                }
+            }
+            json info = {{"title", json_data.value("title", "")},
+                         {"videos", video_array},
+                         {"audios", audio_array},
+                         {"subtitles", subtitle_array}};
+            return info.dump();
         }
         catch (json::parse_error &e)
         {
             std::cerr << "JSON parse error: " << e.what() << std::endl;
         }
 
-        return info;
+        return "";
     }
 
     void download(const std::string &url) const override

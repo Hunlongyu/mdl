@@ -1,12 +1,16 @@
 ﻿#define WIN32_LEAN_AND_MEAN
 #include "./config/config.cpp"
+#include "./utils/js.h"
 #include "./utils/sysinfo.hpp"
+#include "./utils/utils.h"
 #include "spdlog/spdlog.h"
 #include "webui.hpp"
 #include <iostream>
+#include <windows.h>
 
 int main()
 {
+    SetConsoleOutputCP(CP_UTF8);
     spdlog::info("welcome to mdl");
 
     SysInfo sys = getSysInfo();
@@ -21,8 +25,10 @@ int main()
     m_win.set_size(1080, 720);
     if (m_win.set_root_folder("resources") && m_win.show("index.html"))
     {
+        initWebUI(m_win);
         webui::wait();
     }
+    webui::clean();
     return 0;
 }
 

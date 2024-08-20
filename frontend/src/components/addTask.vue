@@ -151,7 +151,12 @@ function confirm() {
     showModal.value = false
 }
 
-function cancel() {
-    showModal.value = false
+async function cancel() {
+    // showModal.value = false
+    console.time('jsFetchVideoInfo');
+    // const re = await jsFetchVideoInfo('https://www.youtube.com/watch?v=9bZkp7q19f0')
+    const re = await jsFetchVideoInfo('https://www.youtube.com/watch?v=t4vSzN2QDrE')
+    console.timeEnd('jsFetchVideoInfo');
+    console.log("re", re)
 }
 </script>

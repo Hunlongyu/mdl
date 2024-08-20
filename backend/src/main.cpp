@@ -19,7 +19,7 @@ int main()
 
     webui::window m_win;
     m_win.set_size(1080, 720);
-    if (m_win.show("resources/index.html"))
+    if (m_win.set_root_folder("resources") && m_win.show("index.html"))
     {
         webui::wait();
     }

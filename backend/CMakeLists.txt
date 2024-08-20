@@ -27,7 +27,7 @@ message(${CMAKE_BUILD_TYPE})
 target_sources(${PROJECT_NAME}
     PRIVATE
     "src/main.cpp"
- "src/utils/utils.h" "src/utils/utils.cpp" "src/config/config.cpp")
+ "src/utils/utils.h" "src/utils/utils.cpp" "src/config/config.cpp" "src/engine/lux.h" "src/engine/ytdlp.h" "src/engine/base.h")
 
 FetchContent_Declare(
     spdlog

@@ -8,6 +8,11 @@ import {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/resources/',
+  build: {
+    outDir: '../backend/src/assets/html/',
+    emptyOutDir: true,
+  },
   plugins: [
     vue(),
     AutoImport({
